@@ -175,6 +175,8 @@ document.querySelectorAll('.project-banner').forEach((banner) => {
   // Keep the same video element and playback position while revealing its frame.
   slides.forEach((slide) => {
     const media = slide.querySelector('.banner-media');
+    // Also detect entry when scrolling brings the movie under a still pointer.
+    media.addEventListener('pointerenter', trackHover);
     media.querySelector('img').addEventListener('load', sizeFrame);
     media.querySelector('video')?.addEventListener('loadedmetadata', sizeFrame);
   });
