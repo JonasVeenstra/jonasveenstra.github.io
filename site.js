@@ -67,8 +67,6 @@ document.querySelectorAll('.project-banner').forEach((banner) => {
   let pinnedExpanded = false;
   let expanded = false;
   let canExpand = false;
-  let hoverPosition = null;
-  let hoverDismissed = false;
 
   controls.hidden = false;
   banner.classList.add('is-enhanced');
@@ -136,7 +134,7 @@ document.querySelectorAll('.project-banner').forEach((banner) => {
     banner.style.setProperty('--banner-expanded-height', `${Math.max(compactHeight, naturalHeight)}px`);
     expandButton.hidden = !canExpand;
     if (!canExpand) { hoverExpanded = false; pinnedExpanded = false; }
-    updateHover();
+    setExpanded();
   }
 
   function setExpanded() {
@@ -148,56 +146,31 @@ document.querySelectorAll('.project-banner').forEach((banner) => {
     if (previous !== expanded) scheduleAdvance();
   }
 
-  function updateHover() {
-    const media = slides[index].querySelector('.banner-media');
-    const rect = media.getBoundingClientRect();
-    const compactHeight = parseFloat(getComputedStyle(banner).getPropertyValue('--banner-compact-height'));
-    // Expansion reveals more of the frame without enlarging the hover area.
-    const inside = hoverPosition && hoverPointer.matches &&
-      hoverPosition.x >= rect.left && hoverPosition.x < rect.right &&
-      hoverPosition.y >= rect.top && hoverPosition.y < rect.top + compactHeight;
-    if (!inside) hoverDismissed = false;
-    hoverExpanded = Boolean(inside && !hoverDismissed &&
-      (hoverExpanded || !hoverPosition.overButton));
-    setExpanded();
-  }
-
-  function trackHover(event) {
-    if (event.pointerType !== 'mouse' || !hoverPointer.matches) return;
-    hoverPosition = {
-      x: event.clientX,
-      y: event.clientY,
-      overButton: Boolean(event.target.closest('button')),
-    };
-    updateHover();
-  }
-
   // Keep the same video element and playback position while revealing its frame.
   slides.forEach((slide) => {
     const media = slide.querySelector('.banner-media');
-    // Also detect entry when scrolling brings the movie under a still pointer.
-    media.addEventListener('pointerenter', trackHover);
+    media.addEventListener('pointerenter', (event) => {
+      if (event.pointerType !== 'mouse' || !hoverPointer.matches) return;
+      hoverExpanded = true;
+      sizeFrame();
+    });
     media.querySelector('img').addEventListener('load', sizeFrame);
     media.querySelector('video')?.addEventListener('loadedmetadata', sizeFrame);
   });
-  banner.addEventListener('pointermove', trackHover);
   banner.addEventListener('pointerleave', () => {
-    hoverPosition = null;
-    updateHover();
+    hoverExpanded = false;
+    setExpanded();
   });
-  window.addEventListener('scroll', updateHover, { passive: true });
   expandButton.addEventListener('click', () => {
     pinnedExpanded = !expanded;
     hoverExpanded = false;
-    hoverDismissed = true;
-    updateHover();
+    setExpanded();
   });
   banner.addEventListener('keydown', (event) => {
     if (event.key !== 'Escape' || !expanded) return;
-    hoverDismissed = true;
     hoverExpanded = false;
     pinnedExpanded = false;
-    updateHover();
+    setExpanded();
   });
   if ('ResizeObserver' in window) {
     let previousWidth = 0;
