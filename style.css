@@ -106,3 +106,7 @@
 @media(max-width:800px){.project-banner{--banner-compact-height:180px}}
 @media(max-width:560px){.project-banner{--banner-compact-height:145px}.banner-expand{right:10px;top:10px}}
 @media(prefers-reduced-motion:reduce){.banner-media,.banner-start{transition:none}}
+
+/* The CV research statement introduces the individual research projects. */
+.research-statement{margin-top:0;max-width:850px}
+.research-statement p:last-child{margin-bottom:0}
