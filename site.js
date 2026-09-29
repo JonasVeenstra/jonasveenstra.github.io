@@ -58,7 +58,7 @@ document.querySelectorAll('.project-banner').forEach((banner) => {
   const hoverPointer = window.matchMedia('(hover: hover) and (pointer: fine)');
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
   let index = slides.findIndex((slide) => !slide.hidden);
-  let playing = true;
+  let playing = !reducedMotion.matches && !navigator.connection?.saveData;
   let autoAdvance = true;
   let inView = true;
   let timer;
