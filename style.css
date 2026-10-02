@@ -17,17 +17,16 @@
 .banner-slide figcaption{margin:0;min-height:56px;padding:14px 24px;font:18px/1.5 Georgia,'Times New Roman',serif;color:var(--link)}
 .banner-slide figcaption a{text-decoration:none}
 .banner-slide figcaption a:hover{text-decoration:underline}
-.is-enhanced .banner-slide figcaption{padding-right:290px}
+.is-enhanced .banner-slide figcaption{padding-right:140px}
 .banner-controls{position:absolute;right:19px;bottom:0;height:56px;display:flex;gap:4px;align-items:center;color:var(--muted)}
 .banner-controls button{display:grid;place-items:center;min-width:36px;min-height:36px;padding:0 8px;background:transparent;border:1px solid transparent;border-radius:2px;color:var(--blue);line-height:1}
 .banner-controls button:hover{background:#e9eff1;border-color:#d5dfe3}
-.banner-controls .banner-toggle{font-size:12px;margin-right:9px;min-width:45px}
 .banner-previous,.banner-next{font-family:Georgia,serif!important;font-size:27px!important}
 .banner-count{font-size:11px;min-width:32px;text-align:center;letter-spacing:.04em}
 .is-enhanced .banner-slide:not([hidden]) .banner-media{animation:banner-appear .7s ease-out}
 @keyframes banner-appear{from{opacity:.25}to{opacity:1}}
 @media(max-width:800px){.banner-media{height:180px}.banner-slide figcaption{font-size:16px;padding-left:22px}}
-@media(max-width:560px){.banner-media{height:145px}.banner-media--wave img,.banner-media--wave video{object-fit:cover}.banner-slide figcaption{font-size:16px;min-height:48px;padding:11px 20px}.is-enhanced .banner-slide figcaption{padding-right:20px}.is-enhanced{padding-bottom:42px}.banner-controls{height:42px;right:14px;left:14px;justify-content:flex-end}.banner-controls .banner-toggle{margin-right:auto}.banner-controls button{min-height:38px;min-width:38px}}
+@media(max-width:560px){.banner-media{height:145px}.banner-media--wave img,.banner-media--wave video{object-fit:cover}.banner-slide figcaption{font-size:16px;min-height:48px;padding:11px 20px}.is-enhanced .banner-slide figcaption{padding-right:20px}.is-enhanced{padding-bottom:42px}.banner-controls{height:42px;right:14px;left:14px;justify-content:flex-end}.banner-controls button{min-height:38px;min-width:38px}}
 @media(prefers-reduced-motion:reduce){.is-enhanced .banner-slide:not([hidden]) .banner-media{animation:none}}
 @media print{.project-banner{display:none!important}}
 
@@ -55,14 +54,7 @@
 @media(max-width:560px){.projects-heading{display:block}.projects-heading p{margin-top:10px}.project-tiles{grid-template-columns:1fr;gap:24px}.project-tile-image{height:215px}.project-tile-content{padding:21px}.project-tile-summary{font-size:15px}.project-tile-venue,.project-tile-links{font-size:13px}}
 @media print{.project-tiles{grid-template-columns:repeat(2,minmax(0,1fr))}.project-tile{break-inside:avoid}.project-tile-image{height:140px}.project-tile-summary{font-size:10pt}}
 
-/* A visible way to start video when autoplay is blocked or motion is reduced. */
-.banner-start{position:absolute;z-index:2;left:50%;top:105px;transform:translate(-50%,-50%);padding:11px 19px;border:1px solid #ffffffbb;border-radius:3px;background:#183849ef;color:#fff;font-size:15px;box-shadow:0 2px 12px #0003}
-.banner-start:hover{background:#225c7c}
-.banner-start span{font-size:12px;margin-right:7px}
-.banner-controls .banner-toggle{min-width:87px;font-size:12px;border-color:#c5d3da}
 .banner-file{font:12px/1.5 Arial,Helvetica,sans-serif;white-space:nowrap;margin-left:15px}
-@media(max-width:800px){.banner-start{top:90px}}
-@media(max-width:560px){.banner-start{top:72px}}
 
 /* Name font comparisons are available only in the design preview (?fonts=1). */
 @font-face{font-family:'Source Sans 3';font-style:normal;font-weight:500;font-display:swap;src:url('assets/fonts/source-sans-3-latin.woff2') format('woff2')}
@@ -94,18 +86,16 @@
 /* Reveal the movie's native proportions without replacing or restarting it. */
 .project-banner{--banner-compact-height:210px;--banner-current-height:var(--banner-compact-height)}
 .project-banner.is-expanded{--banner-current-height:var(--banner-expanded-height)}
-.banner-media{height:var(--banner-current-height);transition:height .32s ease}
+.banner-media{height:var(--banner-current-height);transition:height .5s cubic-bezier(.22,1,.36,1);will-change:height}
 /* Keep the image width fixed throughout the height animation. Switching to
    contain here would shrink the movie first and create an unwanted zoom. */
 .project-banner.is-expanded .banner-media img,.project-banner.is-expanded .banner-media video{object-fit:cover}
+.banner-media--cover img,.banner-media--cover video{object-position:center top}
 /* Very wide clips already fit vertically; reveal their sides without growing. */
 .project-banner.is-expanded .banner-media--wide img,.project-banner.is-expanded .banner-media--wide video{object-fit:contain}
-.banner-start{top:calc(var(--banner-current-height) / 2);transition:top .32s ease}
-.banner-expand{position:absolute;z-index:3;right:14px;top:12px;padding:6px 11px;border:1px solid #ffffffbb;border-radius:3px;background:#183849e8;color:#fff;font:12px/1.5 Arial,Helvetica,sans-serif}
-.banner-expand:hover{background:#225c7c}
 @media(max-width:800px){.project-banner{--banner-compact-height:180px}}
-@media(max-width:560px){.project-banner{--banner-compact-height:145px}.banner-expand{right:10px;top:10px}}
-@media(prefers-reduced-motion:reduce){.banner-media,.banner-start{transition:none}}
+@media(max-width:560px){.project-banner{--banner-compact-height:145px}}
+@media(prefers-reduced-motion:reduce){.banner-media{transition:none}}
 
 /* The CV research statement introduces the individual research projects. */
 .research-statement{margin-top:0;max-width:850px}

@@ -51,10 +51,7 @@ document.querySelectorAll('.project-banner').forEach((banner) => {
   const slides = [...banner.querySelectorAll('.banner-slide')];
   const track = banner.querySelector('.banner-slides');
   const controls = banner.querySelector('.banner-controls');
-  const toggle = banner.querySelector('.banner-toggle');
   const count = banner.querySelector('.banner-count');
-  const startButton = banner.querySelector('.banner-start');
-  const expandButton = banner.querySelector('.banner-expand');
   const hoverPointer = window.matchMedia('(hover: hover) and (pointer: fine)');
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
   let index = slides.findIndex((slide) => !slide.hidden);
@@ -64,7 +61,6 @@ document.querySelectorAll('.project-banner').forEach((banner) => {
   let timer;
   let playbackAttempt = 0;
   let hoverExpanded = false;
-  let pinnedExpanded = false;
   let expanded = false;
   let canExpand = false;
 
@@ -76,9 +72,6 @@ document.querySelectorAll('.project-banner').forEach((banner) => {
     const attempt = ++playbackAttempt;
     const active = playing && inView && !document.hidden;
     track.setAttribute('aria-live', playing && autoAdvance ? 'off' : 'polite');
-    toggle.textContent = playing ? 'Pause movie' : 'Play movie';
-    toggle.setAttribute('aria-label', playing ? 'Pause banner movie' : 'Play banner movie');
-    startButton.hidden = playing;
     banner.dataset.playback = active ? 'loading' : 'paused';
     count.textContent = `${index + 1} / ${slides.length}`;
     slides.forEach((slide, i) => {
@@ -98,8 +91,8 @@ document.querySelectorAll('.project-banner').forEach((banner) => {
           if (attempt === playbackAttempt) banner.dataset.playback = 'playing';
         }).catch((error) => {
           if (attempt !== playbackAttempt || error.name === 'AbortError') return;
-          // Autoplay can be blocked. Make one-click playback available instead
-          // of leaving a misleading Pause button over a still photograph.
+          // When autoplay is unavailable, keep the still frame and expose the
+          // direct movie link in the caption rather than adding an overlay.
           playing = false;
           autoAdvance = false;
           sync();
@@ -132,17 +125,14 @@ document.querySelectorAll('.project-banner').forEach((banner) => {
     canExpand = Boolean(video && width && compactFit === 'cover' && Math.abs(naturalHeight - compactHeight) > 2);
     media.classList.toggle('banner-media--wide', naturalHeight < compactHeight);
     banner.style.setProperty('--banner-expanded-height', `${Math.max(compactHeight, naturalHeight)}px`);
-    expandButton.hidden = !canExpand;
-    if (!canExpand) { hoverExpanded = false; pinnedExpanded = false; }
+    if (!canExpand) hoverExpanded = false;
     setExpanded();
   }
 
   function setExpanded() {
     const previous = expanded;
-    expanded = canExpand && (hoverExpanded || pinnedExpanded);
+    expanded = canExpand && hoverExpanded;
     banner.classList.toggle('is-expanded', expanded);
-    expandButton.setAttribute('aria-expanded', String(expanded));
-    expandButton.textContent = expanded ? 'Compact view' : 'Full frame';
     if (previous !== expanded) scheduleAdvance();
   }
 
@@ -159,17 +149,6 @@ document.querySelectorAll('.project-banner').forEach((banner) => {
   });
   banner.addEventListener('pointerleave', () => {
     hoverExpanded = false;
-    setExpanded();
-  });
-  expandButton.addEventListener('click', () => {
-    pinnedExpanded = !expanded;
-    hoverExpanded = false;
-    setExpanded();
-  });
-  banner.addEventListener('keydown', (event) => {
-    if (event.key !== 'Escape' || !expanded) return;
-    hoverExpanded = false;
-    pinnedExpanded = false;
     setExpanded();
   });
   if ('ResizeObserver' in window) {
@@ -189,21 +168,11 @@ document.querySelectorAll('.project-banner').forEach((banner) => {
       oldVideo.currentTime = 0;
     }
     index = (next + slides.length) % slides.length;
-    // Keep the chosen movie playing, but stay on that project until Play is used.
+    // Keep the selected movie visible until the visitor chooses another one.
     if (manual) autoAdvance = false;
     sync();
   }
 
-  toggle.addEventListener('click', () => {
-    playing = !playing;
-    if (playing) autoAdvance = true;
-    sync();
-  });
-  startButton.addEventListener('click', () => {
-    playing = true;
-    autoAdvance = true;
-    sync();
-  });
   slides.forEach((slide, i) => {
     slide.querySelector('video')?.addEventListener('error', () => {
       if (i === index && playing) { playing = false; sync(); }
@@ -212,8 +181,8 @@ document.querySelectorAll('.project-banner').forEach((banner) => {
   banner.querySelector('.banner-previous').addEventListener('click', () => show(index - 1, true));
   banner.querySelector('.banner-next').addEventListener('click', () => show(index + 1, true));
   // Keyboard users can follow the project link without it moving underneath them.
-  banner.addEventListener('focusin', (event) => {
-    if (event.target !== toggle && event.target !== startButton && autoAdvance) { autoAdvance = false; sync(); }
+  banner.addEventListener('focusin', () => {
+    if (autoAdvance) { autoAdvance = false; sync(); }
   });
   reducedMotion.addEventListener('change', () => {
     if (reducedMotion.matches) { playing = false; sync(); }
