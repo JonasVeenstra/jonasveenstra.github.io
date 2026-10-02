@@ -97,6 +97,7 @@
 .project-banner.is-expanded .banner-media--wide img,.project-banner.is-expanded .banner-media--wide video{object-fit:contain}
 @media(max-width:800px){.project-banner{--banner-compact-height:180px}}
 @media(max-width:560px){.project-banner{--banner-compact-height:145px}}
+.intro--with-portrait{display:grid;grid-template-columns:minmax(0,1fr) 220px;gap:36px;align-items:start}.intro-portrait{margin:0}.intro-portrait img{display:block;width:100%;aspect-ratio:4/5;object-fit:cover;object-position:center top}@media(max-width:800px){.intro--with-portrait{grid-template-columns:minmax(0,1fr) 190px;gap:28px}}@media(max-width:560px){.intro--with-portrait{grid-template-columns:1fr;gap:24px}.intro-portrait{width:min(220px,68vw);justify-self:start}}
 
 /* The CV research statement introduces the individual research projects. */
 .research-statement{margin-top:0;max-width:850px}
