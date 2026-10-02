@@ -151,6 +151,20 @@ document.querySelectorAll('.project-banner').forEach((banner) => {
     hoverExpanded = false;
     setExpanded();
   });
+  // The revealed part of an expanded movie is visual context, not an
+  // additional hover target. Leaving the original compact frame folds it back.
+  banner.addEventListener('pointermove', (event) => {
+    if (!expanded || event.pointerType !== 'mouse' || !hoverPointer.matches) return;
+    const media = slides[index].querySelector('.banner-media');
+    const bounds = media.getBoundingClientRect();
+    const compactHeight = parseFloat(getComputedStyle(banner).getPropertyValue('--banner-compact-height'));
+    const inCompactFrame = event.clientX >= bounds.left && event.clientX <= bounds.right
+      && event.clientY >= bounds.top && event.clientY <= bounds.top + compactHeight;
+    if (!inCompactFrame) {
+      hoverExpanded = false;
+      setExpanded();
+    }
+  });
   if ('ResizeObserver' in window) {
     let previousWidth = 0;
     new ResizeObserver(([entry]) => {
