@@ -91,7 +91,8 @@
 /* Keep the image width fixed throughout the height animation. Switching to
    contain here would shrink the movie first and create an unwanted zoom. */
 .project-banner.is-expanded .banner-media img,.project-banner.is-expanded .banner-media video{object-fit:cover}
-.banner-media img,.banner-media video{object-position:center top}
+/* Compact cover banners crop around their centre; full-height frames have no crop. */
+.banner-media--cover img,.banner-media--cover video{object-position:center center}
 /* Very wide clips already fit vertically; reveal their sides without growing. */
 .project-banner.is-expanded .banner-media--wide img,.project-banner.is-expanded .banner-media--wide video{object-fit:contain}
 @media(max-width:800px){.project-banner{--banner-compact-height:180px}}
