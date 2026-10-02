@@ -83,19 +83,19 @@
 @media(max-width:640px){.font-options{grid-template-columns:1fr;gap:8px}.font-options button{padding:12px}.font-sample{font-size:27px}.font-preview{max-width:340px}}
 @media print{.font-preview{display:none!important}.site-title{font-size:24pt}.course-list{font-size:10pt}}
 
-/* Reveal the movie's native proportions without replacing or restarting it. */
+/* Reveal the movie's native proportions without replacing or restarting it.
+   The hover-triggered fold uses the requested 0.5s timing in both directions. */
 .project-banner{--banner-compact-height:210px;--banner-current-height:var(--banner-compact-height)}
 .project-banner.is-expanded{--banner-current-height:var(--banner-expanded-height)}
-.banner-media{height:var(--banner-current-height);transition:height .5s cubic-bezier(.22,1,.36,1);will-change:height}
+.banner-media{height:var(--banner-current-height);transition:height .5s ease-in-out;will-change:height}
 /* Keep the image width fixed throughout the height animation. Switching to
    contain here would shrink the movie first and create an unwanted zoom. */
 .project-banner.is-expanded .banner-media img,.project-banner.is-expanded .banner-media video{object-fit:cover}
-.banner-media--cover img,.banner-media--cover video{object-position:center top}
+.banner-media img,.banner-media video{object-position:center top}
 /* Very wide clips already fit vertically; reveal their sides without growing. */
 .project-banner.is-expanded .banner-media--wide img,.project-banner.is-expanded .banner-media--wide video{object-fit:contain}
 @media(max-width:800px){.project-banner{--banner-compact-height:180px}}
 @media(max-width:560px){.project-banner{--banner-compact-height:145px}}
-@media(prefers-reduced-motion:reduce){.banner-media{transition:none}}
 
 /* The CV research statement introduces the individual research projects. */
 .research-statement{margin-top:0;max-width:850px}
